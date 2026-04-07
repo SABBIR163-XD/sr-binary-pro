@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SR Binary Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { background:#0b0b0b; color:white; text-align:center; font-family:Arial; }
+h1 { color:gold; }
+.box { background:#111; padding:15px; margin:10px; border-radius:10px; }
+button { padding:10px; margin:10px; background:gold; border:none; }
+</style>
+</head>
+
+<body>
+
+<h1>🔥 SR BINARY PRO 🔥</h1>
+
+<div class="box">
+<select id="pair">
+<option>EURUSD</option>
+<option>GBPUSD</option>
+<option>USDJPY</option>
+<option>AUDUSD</option>
+</select>
+</div>
+
+<div class="box">
+<iframe id="chart" width="100%" height="400"></iframe>
+</div>
+
+<div class="box">
+<button onclick="loadChart()">Load Chart</button>
+<button onclick="getSignal()">Get Signal</button>
+</div>
+
+<div class="box" id="result"></div>
+
+<script>
+
+function loadChart(){
+  let pair = document.getElementById("pair").value;
+  document.getElementById("chart").src =
+  `https://s.tradingview.com/widgetembed/?symbol=${pair}&interval=1&theme=dark`;
+}
+
+function getSignal(){
+  let pair = document.getElementById("pair").value;
+
+  fetch("/signal", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({pair:pair})
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    document.getElementById("result").innerHTML = `
+    📊 PAIR: ${data.pair} <br>
+    📈 Direction: ${data.direction} <br>
+    📌 Reason: ${data.reason}
+    `;
+  });
+}
+
+</script>
+
+</body>
+</html>
